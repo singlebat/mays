@@ -1,0 +1,212 @@
+<apex:page showHeader="false" controller="hosyoukinController" standardStylesheets="false" applyHtmlTag="false"  docType="html-5.0" renderAs="PDF">
+<html>
+    <head>
+        <style>
+         @page {
+                size: 21.0cm 29.7cm;
+                margin-top: 0cm;
+                margin-left: 1.3cm;
+                margin-right: 1.3cm;
+                margin-bottom: 0.7cm;
+            }
+            body {
+                font-family: Arial Unicode MS;
+                font-size: 13px;
+                margin:0 0;
+            }
+               
+                table.table1  {border-collapse: collapse;}
+                
+                .tdcl{text-align: right;vertical-align: bottom;padding-left:4px}
+
+                .tdb1{border-bottom:solid 1px #000; text-align: center;height: 50px;vertical-align: bottom;padding-left:4px}
+                
+                .tdb2{border-bottom:solid 1px #000; text-align: center;height: 56px;vertical-align: bottom;padding-left:4px}
+                
+                .tdb3{border-bottom:solid 1px #000; text-align: center;height: 64px;vertical-align: bottom;padding-left:4px}
+                
+                .tdb4{border-bottom:solid 1px #000; text-align: center;height: 75px;vertical-align: bottom;padding-left:4px}
+               
+               .page-break-inside{page-break-inside: avoid;}
+
+               .page-break-after{ page-break-after: always;}
+               
+               .hide{display:none;}
+
+               .divsty{border-bottom: solid 0.5px #000}    
+               
+               .textright{text-align: right;padding-right: 2px}
+
+                .titleposition {
+          position: absolute;
+         
+        }
+
+         .titlebig{
+          position: absolute;
+          top: 2.0cm;
+         }
+
+
+          .titlebango{
+            position: absolute;
+            top: 1.1cm;
+        }
+
+        .logoposition{
+         position: absolute;
+         right:13px;
+         top: 105px;
+        }
+        </style>
+    </head>
+    <body>
+    <!-- 表示しない行数を示す -->
+    <apex:variable var="space" value="{!0}"/>
+    <apex:variable var="space" value="{!if(agreement.TotalFee__c==0,space+1,space)}"/>
+    <apex:variable var="space" value="{!if(agreement.HenkinAmount__c==0,space+1,space)}"/>
+    <apex:variable var="space" value="{!if(OR(agreement.OverPaymentAmount__c==0,agreement.OverPaymentAmount__c==null),space+1,space)}"/>
+     
+    <apex:variable var="spaceclass" value="{!'tdb1'}"/> 
+    <apex:variable var="spaceclass" value="{!if(space==1,'tdb2',spaceclass)}"/>
+    <apex:variable var="spaceclass" value="{!if(space==2,'tdb3',spaceclass)}"/>
+    <apex:variable var="spaceclass" value="{!if(space==3,'tdb4',spaceclass)}"/>
+    
+    <div class="titlebango" style="width:100%;">
+      <div style="text-align: right;font-size: 13px;">
+        <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+          <apex:param value="{!today()}" />
+        </apex:outputText>
+      </div>  
+   </div>
+
+    <div class="logoposition">
+          <div class="printItem" style="font-size:11.5px;top:36px;right:0px;">
+          <div style="font-size:17px;">
+            <img style="position:relative;top:4px" src="{!$Resource.logoPDF}" width="65" height="29"/> 株式会社 メイズ
+          </div>
+            〒105-0001
+            <br/> 東京都港区虎ノ門3-2-2     
+            <div style="position:relative;left:100px;top:-3px">虎ノ門30森ビル1階</div>
+            TEL:03-5402-4600　Fax:03-5402-4660   
+          </div>
+          <div style="font-size:10.5px;float:right;margin-right:120px;">
+            (担当:　{!agreement.Owner.Name})     
+          </div>
+        </div>
+
+
+
+            
+    　　        <div class="divsty"  style="width:420px;height:20px;margin-top: 35px;font-size: 15px;">{!agreement.Estimate__r.Account__c}</div>
+
+        <div class="divsty"  style="width:420px;height:20px;margin-top: 15px;font-size: 15px;">{!agreement.Estimate__r.Opportunity__r.Account.Contact_Position__c &'　　　'& agreement.Estimate__r.Opportunity__r.Account.Contact_name__c }</div> 
+        
+      
+   
+        <div style="text-align: center;font-size: 25px; margin-top: 135px;">保証金返金のお知らせ</div>
+        <div style="margin-top: 20px;font-size: 15.5px;margin-left: 35px">
+            謹啓、時下益々ご清祥の事とお慶び申し上げます。<br/>
+            さて、貴殿（貴社）とのリース契約終了にともない下記のとおり保証金を返金いたしますので、<br/>
+            ご確認下さい。<br/>
+            弊社リースをご利用いただきまして誠にありがとうございました。
+        </div>
+        <div style="margin-top: 20px;font-size: 15px;padding-left: 520px">
+            敬具
+        </div>
+        <div style="margin-top: 35px;font-size: 15px;text-align: center">
+            記
+        </div>
+
+        <table class="table1" style="width: 530px;height:450px;margin-top: 0px;margin-left:65px;font-size: 15px">
+            <tr>
+                <td class="tdcl" width="15%"  valign="bottom" style="text-align: right">使用者</td>
+                <td class="{!spaceclass}" width="4%" ></td>
+                <td class="{!spaceclass}" width="" >{!agreement.UserNew__c}</td>
+            </tr>
+             <tr>
+                <td class="tdcl" style="text-align: right">預り保証金</td>
+                <td class="{!spaceclass}"></td>
+                <td class="{!spaceclass}">
+                <apex:outputField value="{!agreement.Hoshokin__c}"/>
+                </td>
+            </tr>
+            <tr class="{!if(OR(agreement.OverPaymentAmount__c==0,agreement.OverPaymentAmount__c==null),'hide','')}">
+                <td class="tdcl" width="" valign="bottom" style="text-align: right">過入金返金</td>
+                <td class="{!spaceclass}" width=""></td>
+                <td width="" class="{!spaceclass}">
+                
+                <apex:outputText value="{0, number,￥###,###,###}">
+                         <apex:param value="{!if(agreement.OverPaymentAmount__c==0,'',agreement.OverPaymentAmount__c)}" />  <!--{!productlist.SalesCost__c}-->
+                </apex:outputText> 
+                </td>
+            </tr>
+            <tr class="{!if(or(agreement.TotalFee__c==0,agreement.HoshokinSousai__c == '希望しない'),'hide','')}">
+                <td class="tdcl" width="" valign="bottom" style="text-align: right">差引</td>
+                <td class="{!spaceclass}" width=""></td>
+                <td width="" class="{!spaceclass}">
+                	 <apex:outputText value="{0, number,￥###,###,###}">
+                         <apex:param value="{!if(agreement.TotalFee__c==0,'',agreement.TotalFee__c)}" />  <!--{!productlist.SalesCost__c}-->
+                     </apex:outputText> 
+                </td>
+            </tr>
+            
+             <tr class="{!if(agreement.HenkinAmount__c==0,'hide','')}">
+                <td class="tdcl" width="" valign="bottom" style="text-align: right">返金額</td>
+                <td class="{!spaceclass}" width=""></td>
+                <td width="" class="{!spaceclass}">
+                
+                <apex:outputText value="{0, number,￥###,###,###}">
+                         <apex:param value="{!if(agreement.HenkinAmount__c==0,'',agreement.HenkinAmount__c)}" />  <!--{!productlist.SalesCost__c}-->
+                     </apex:outputText> 
+                </td>
+            </tr>
+            
+             <tr>
+                <td class="tdcl" style="text-align: right">契約番号</td>
+                <td class="{!spaceclass}"></td>
+                <td class="{!spaceclass}">{!agreement.Name}</td>
+            </tr>
+           
+            
+            <tr>
+                <td class="tdcl" style="text-align: right">契約期間</td>
+                <td class="{!spaceclass}"></td>
+                <td class="{!spaceclass}">
+                 <apex:outputText value="{0,date,自 yyyy年}{0,date,MM月}{0,date,dd日}">
+                   <apex:param value="{!agreement.LeaseStart__c}"/>
+                 </apex:outputText>
+                <apex:outputText value="{0,date,至 yyyy年}{0,date,MM月}{0,date,dd日}">
+                   <apex:param value="{!agreement.LeaseEnd__c}"/>
+                </apex:outputText></td>
+            </tr>
+            <tr>
+                <td class="tdcl" style="text-align: right">返金日</td>
+                <td class="{!spaceclass}"></td>
+                <td class="{!spaceclass}">
+                <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+                   <apex:param value="{!agreement.ReturnHoshokinDate__c}"/>
+                </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdcl" style="text-align: right">振込先</td>
+                <td class="{!spaceclass}"></td>
+                <td class="{!spaceclass}">{!agreement.Financial_Name__c}</td>
+            </tr> 
+            
+        </table>
+        
+        <div style="font-size: 15px;float:right;width:170px;margin-top: 45px;margin-right: 270px;">
+           {!agreement.Bank_account_type3__c}　&nbsp;口座番号
+            <div style="border-bottom: solid 0.5px #000;width:180px;height:22px;margin-top:-22px;margin-left:152px;font-size: 15px;">
+                {!agreement.Bank_account_Number__c}
+           </div>
+        </div>
+        <div style="margin-top: 110px;font-size: 14px;margin-left: 90px;font-size: 15px">振込元　　{!financialName}　　{!financialbranch}</div>  
+
+          
+    </body>
+
+</html>
+</apex:page>

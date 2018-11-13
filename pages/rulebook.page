@@ -1,0 +1,19 @@
+<apex:page tabStyle="Account">
+        <apex:pageBlock title="社内規定・マニュアル">
+            <apex:pageBlockSection title="社内規定" collapsible="true">
+              <apex:pageBlockSection title="総務・人事系" collapsible="true">
+                <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVuz/Ur3B7N_1YNUaa8nK4Iov_2CvgYuuq62wf_QIaQHUejE">就業規則</apex:outputLink><br />
+                  <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVv9/YyQ2I2W4L7tdQdB_hJfgVTKIINER40RmvPe6PanJPpw">給与規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvE/2yNHpgN9J1RzQo2f0_D1IFvi6OHVPHA9qNZPiIIVdIU">シニア契約社員就業規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvJ/ViWN4gjc_tykFjfLj88T4m8qV0vPQyXVaccUK9EcWuc">シニア契約社員給与規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVv4/cx8fslQFGNjuLqxuJGUP1rE0Yj1QJUQ8Y3m43_ForB4">契約社員等の給与規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvO/QGfYbsi0La77yjjgUrncpdQeRH75TFYhlIV1Np7Kmus">育児介護休業規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvd/1JnN9EQZ8gXNRjLPFgRZLigvrnMYmlp3d25IFiADMpw">慶弔見舞金規程</apex:outputLink><br />
+               <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvi/oyTR_dC1rcftGbDGWCpNOl7Jy.TfMjqTJ3v91NyE1mo">短時間勤務規程</apex:outputLink><br />
+                 <apex:outputLink value="https://mays-jp.my.salesforce.com/sfc/p/7F000000qdzG/a/7F000000PVvn/uT5FhcVh5de4ZrN_QqEx407w0jzwCswVrHfeuSEXE8Q">退職金規程</apex:outputLink>
+
+             </apex:pageBlockSection>
+            </apex:pageBlockSection>
+          
+        </apex:pageBlock>
+</apex:page>

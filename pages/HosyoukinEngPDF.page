@@ -1,0 +1,183 @@
+<apex:page showHeader="false" controller="hosyoukinController" standardStylesheets="false" applyHtmlTag="false"  docType="html-5.0" renderAs="PDF">
+<html>
+    <head>
+        <style>
+         @page {
+                size: 21.0cm 29.7cm;
+                margin-top: 0cm;
+                margin-left: 1.3cm;
+                margin-right: 1.3cm;
+                margin-bottom: 0.7cm;
+            }
+            body {
+                font-family: Arial Unicode MS;
+                font-size: 13px;
+                margin:0 0;
+            }
+               
+                table.table1  {border-collapse: collapse;}
+
+                table.table1  td{text-align: left;height: 50px;border:solid 0px #000;padding-left:4px;vertical-align: bottom}
+
+                table.table1  td.tdb{border-bottom:solid 1px #000; text-align: center;}
+               
+               .page-break-inside{page-break-inside: avoid;}
+
+               .page-break-after{ page-break-after: always;}
+
+               .divsty{border-bottom: solid 0.5px #000}    
+               
+               .textright{text-align: right;padding-right: 2px}
+
+                .titleposition {
+          position: absolute;
+         
+        }
+
+         .titlebig{
+          position: absolute;
+          top: 2.0cm;
+         }
+
+
+          .titlebango{
+            position: absolute;
+            top: 1.1cm;
+        }
+
+        .logoposition{
+         position: absolute;
+         right:13px;
+         top: 105px;
+        }
+        </style>
+    </head>
+    <body> 
+                 
+    <div class="titlebango" style="width:100%;">
+      <div style="text-align: right;font-size: 13px;">
+        <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}">
+          <apex:param value="{!today()}" />
+        </apex:outputText>
+      </div>  
+   </div>
+
+   
+	<div class="logoposition">
+         <div class="printItem" style="font-size:11.5px;top:36px;right:0px;">
+          	<div style="font-size:17px">
+             	<img style="position:relative;top:4px" src="{!$Resource.logoPDF}" width="65" height="29" /> May's Corporation
+         	</div>
+             	〒105-0001
+             <div style="position:relative;left:56px;top:-3px">Toranomon30Mori Bldg. 1F,</div>
+             <div style="position:relative;left:28px;top:-3px">3-2-2Toranomon,Minato-ku,Tokyo</div>
+             TEL:03-5402-4600　Fax:03-5402-4660
+         </div>
+		 <div style="font-size:10.5px;float:right;margin-right:120px;">
+            (担当:　{!agreement.Owner.Name})
+          </div>
+	</div>
+
+
+
+
+	<div class="divsty"  style="width:420px;height:20px;margin-top: 35px;font-size: 15px;">{!agreement.Estimate__r.Account__c}</div>
+
+        <div class="divsty"  style="width:420px;height:20px;margin-top: 15px;font-size: 15px;">{!agreement.Estimate__r.Opportunity__r.Account.Contact_Position__c &'　　　'& agreement.Estimate__r.Opportunity__r.Account.Contact_name__c }</div> 
+        
+      
+   
+        <div style="text-align: center;font-size: 25px; margin-top: 155px;">Notice of Security Refundment</div>
+        <div style="
+        margin-top: 20px;font-size: 15.5px;margin-left: 35px">
+            Please be notified that your security for the furniture lease contract below will be returned <br/>to you as follows:<br/>
+           
+        </div>
+        <div style="margin-top: 20px;font-size: 15px;padding-left: 520px">
+           
+        </div>
+        <div style="margin-top: 35px;font-size: 15px;text-align: center">
+            
+        </div>
+
+        <table class="table1" style="width: 530px;margin-top: 0px;margin-left:65px;font-size: 15px">
+            <tr>
+                <td width="25%"  valign="bottom" style="text-align: right">Client Name</td>
+                <td width="4%" ></td>
+                <td width="" class="tdb">{!agreement.UserNew__c}</td>
+            </tr>
+             <tr>
+                <td class="textright" style="text-align: right">Security Deposit</td>
+                <td></td>
+                <td class="tdb">
+                <apex:outputField value="{!agreement.Hoshokin__c}"/>
+                </td>
+            </tr>
+             <tr>
+                <td width="" valign="bottom" style="text-align: right">Balance</td>
+                <td width=""></td>
+                <td width="" class="tdb">
+                 	<apex:outputText value="{0, number,￥###,###,###}">
+                         <apex:param value="{!if(agreement.TotalFee__c==0,'',agreement.TotalFee__c)}" />  <!--{!productlist.SalesCost__c}-->
+                     </apex:outputText> 
+                </td>
+            </tr>
+            
+             <tr>
+                <td width="" valign="bottom" style="text-align: right">Amount Due</td>
+                <td width=""></td>
+                <td width="" class="tdb">
+                
+                 <apex:outputText value="{0, number,￥###,###,###}">
+                         <apex:param value="{!if(agreement.HenkinAmount__c==0,'',agreement.HenkinAmount__c)}" />  <!--{!productlist.SalesCost__c}-->
+                     </apex:outputText>
+                </td>
+            </tr>
+             <tr>
+                <td style="text-align: right">Contract No.</td>
+                <td></td>
+                <td class="tdb">{!agreement.Name}</td>
+            </tr>
+           
+            
+            <tr>
+                <td style="text-align: right">Lease Term</td>
+                <td></td>
+                <td class="tdb">　&nbsp;&nbsp;
+                 <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}～">
+                   <apex:param value="{!agreement.LeaseStart__c}"/>
+                 </apex:outputText>　 　&nbsp;
+                <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}">
+                   <apex:param value="{!agreement.LeaseEnd__c}"/>
+                </apex:outputText></td>
+            </tr>
+            <tr>
+                <td style="text-align: right">Date of Transfer</td>
+                <td></td>
+                <td class="tdb">
+                <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}">
+                   <apex:param value="{!agreement.ReturnHoshokinDate__c}"/>
+                </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">Bank Account</td>
+                <td></td>
+                <td class="tdb">{!agreement.Financial_Name__c}</td>
+            </tr> 
+            
+        </table>
+        
+        <div style="font-size: 15px;float:right;width:170px;margin-top: 45px;margin-right: 270px;">
+           {!agreement.Bank_account_type3__c}　&nbsp;Account No.
+            <div style="border-bottom: solid 0.5px #000;width:180px;height:22px;margin-top:-22px;margin-left:165px;font-size: 15px;">
+                {!agreement.Bank_account_Number__c}
+           </div>
+        </div>
+        <div style="margin-top: 110px;font-size: 14px;margin-left: 90px;font-size: 15px">From　　{!financialName}　　{!financialbranch}</div>  
+
+          
+    </body>
+
+</html>
+</apex:page>

@@ -1,0 +1,295 @@
+<apex:page showHeader="false" controller="ShiharaiPDFController" standardStylesheets="false" applyHtmlTag="false"  docType="html-5.0" renderAs="PDF">
+    
+<html>
+<head>
+        <style>
+               @page {
+                size: 21.0cm 29.7cm;
+                margin-top: 0cm;
+                margin-left: 0.9cm;
+                margin-right: 0.9cm;
+                margin-bottom: 0.7cm;
+            }
+                body {
+                font-family : Arial Unicode MS;
+                font-size:12px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-left: 0px;
+                }
+               
+                .printItem{
+                    position:absolute;
+                 }
+                .printItem1{
+                    position:relative;
+                 }
+            
+                table.tablea td{height:25px}
+            
+                
+ 
+               .textleft{text-align: left;padding-left: 2px}
+               .textright{text-align: right;/*padding-right: 2px*/}
+               .textcenter{text-align: center}
+                table.table2  {border-top: solid 1.5px #000;border-bottom: solid 1.5px #000;border-left: solid 1.5px #000;}
+                table.table2  td{border-right: solid 1.5px #000;border-bottom: solid 1px #DDDDDD;}
+                 
+               
+                .rightb{border-right: solid 1.2px #000;}
+
+                .page-break-inside{
+                               page-break-inside:avoid;
+       　　　       }
+                .noleft{border-left:0px}
+                .noright{border-right:0px}
+
+                .backgroundc:{background-color:#d0d0d0;}
+
+                table.tableA{ 
+                         width:50%;
+                         font-size: 11px;
+                         margin-top: 5px;
+                         float:left;
+                         border-top: solid 1.5px #000;
+                         border-left: solid 1.5px #000;
+                         border-bottom: solid 1.5px #000;
+                     }
+
+
+                 .bottomb{border-bottom: solid 1.5px #000;border-right: solid 1.3px #000;}
+
+
+              .titleposition {
+                        position: absolute;
+                     }
+
+                  .logoposition {
+                        position: absolute;
+                        right: 0px;
+                        top: 110px;
+                     }
+
+
+
+               
+          </style>
+
+</head>
+<body>
+    
+    <div class="titleposition" style="top: 2.0cm;width: 100%;height: 20px;text-align: center;font-size:25px;">
+        <div>お支払い予定表</div>
+        
+    </div>
+
+      <div class="logoposition">
+                <div style="font-size:17px">
+                    <img style="position:relative;top:4px;right:4px;" src="{!$Resource.logoPDF}" width="65" height="29" /> 株式会社 メイズ
+                </div>
+                <div class="printItem" style="font-size:11.5px;top:36px;right:0px;">
+                    〒105-0001
+                    <br/> 東京都港区虎ノ門3-2-2
+                    <div style="position:relative;left:100px;top:-3px">虎ノ門30森ビル1階</div>
+                    TEL:03-5402-4600　Fax:03-5402-4660
+                </div>
+      </div>
+
+      <div class="titleposition" style="width: 100%;top:3cm;font-size: 14px;">
+              <div  style="width:300px;margin-top:15px ">{!agreement.ContractorPostalCode__c}</div>
+
+              <div  style="width:360px; margin-top: 2px"> 
+                {!agreement.ContractorAdress__c}</div>
+
+                <div  style=" width:250px; margin-top: 15px">
+                 {!agreement.Contractors__c}様
+               </div>
+      </div>
+
+    
+        <div  style="margin-top: 6.2cm;font-size: 14px;margin-left:375px;width:150px ">
+         ＜ ご契約概要＞
+        </div>
+        <div style="float:left;margin-top:0.5cm;width:45%;">
+            <table class="tablea" cellspacing="0" style="width:100%;font-size: 11px;">
+                <tr><td width="100%">この度は弊社をご利用いただき、誠にありがとうございます。</td></tr>
+                <tr><td width="100%">さて、本契約における貴社のお支払いスケジュールは下記の通りです。</td></tr>
+                <tr><td width="100%">下記のお支払期日までにお支払くださいますようお願い申し上げます。</td></tr>
+                <tr><td width="100%">その他ご不明な点等ございましたら、右記載のご契約番号により弊社</td></tr>
+                <tr><td width="100%">担当までご照会ください。</td></tr>
+                <tr><td width="100%">（消費税等は、契約日現在の消費制度に基づき消費税により算出、</td></tr>
+                <tr><td width="100%">表示しております。）</td></tr>
+            </table>
+        </div>
+        <div style="float:right;width:48.3%;margin-top: 0.2cm;border:solid 1px #000;">
+            <table style="width:100%;font-size: 12px;">
+                <tr style="height:16px;">
+                    <td width="30%" class="textleft">契約番号</td>
+                    <td width="70%" style="border-right: 0px" >{!agreement.Name}</td>
+                </tr>
+                <tr style="height:16px;">
+                    <td class="textleft">締結日</td>
+                    <td style="border-right: 0px">
+                        <apex:outputText value="{0,date,yyyy}年{0,date,MM}月{0,date,dd}日" rendered="{!agreement.TeiketuDay__c!=null}">
+                            <apex:param value="{!agreement.TeiketuDay__c}" />
+                        </apex:outputText>
+                    </td>      
+                </tr> 
+                <tr style="height:16px;">
+                    <td class="textleft">リース開始日</td>
+                    <td style="border-right: 0px">
+                        <apex:outputText value="{0,date,yyyy}年{0,date,MM}月{0,date,dd}日" rendered="{!agreement.LeaseStart__c!=null}">
+                            <apex:param value="{!agreement.LeaseStart__c}" />
+                        </apex:outputText>                        
+                    </td>      
+                </tr>  
+                <tr style="height:16px;">
+                    <td class="textleft">リース終了日</td>
+                    <td style="border-right: 0px">
+                        <apex:outputText value="{0,date,yyyy}年{0,date,MM}月{0,date,dd}日" rendered="{!agreement.LeaseEnd__c!=null}">
+                            <apex:param value="{!agreement.LeaseEnd__c}" />
+                        </apex:outputText> 
+                    </td>      
+                </tr>
+                <tr style="height:16px;">
+                    <td class="textleft">お支払い回数</td>
+                    <td style="border-right: 0px">{!agreement.PaymentCount__c}</td>      
+                </tr>
+                <tr style="height:16px;">
+                    <td class="textleft" style="border-bottom: 0px">お支払方法</td>
+                    <td style="border-bottom: 0px;border-right: 0px">{!agreement.PaymentMethod__c}</td>      
+                </tr>
+                
+                <tr style="height:6px">
+                    <td style="border-top: 0px " ></td>
+                    <td style="border-top: 0px;border-right: 0px" ></td>      
+                </tr>
+                
+                 <tr style="height:16px;">
+                    <td class="textleft">お支払額総額</td>
+                    <td style="border-right: 0px" >
+                        <apex:outputField value="{!agreement.Estimate__r.PayAmountWithTax__c}"/>
+                     </td>      
+                </tr>
+                 <tr style="height:18px;">
+                    <td class="textleft">月額リース料</td>
+                    <td style="border-right: 0px" >  
+                        <apex:outputField value="{!agreement.MonthlyLeaseFeeTotal2__c}"/>
+                     </td>      
+                </tr>
+                <tr style="height:18px;">
+                    <td class="textleft">月額消費税</td>
+                    <td style="border-right: 0px">
+                        <apex:outputField value="{!agreement.MonthlyLeaseFeeTax__c}"/>
+                    </td>      
+                </tr>
+                <tr style="height:18px;">
+                    <td class="textleft" style="border-bottom: 0px;">使用者</td>
+                    <td style="border-right: 0px;border-bottom: 0px">{!agreement.UserNew__c}</td>      
+                </tr>
+                 <tr style="height:18px;">
+                    <td style="border-top: 0px;"></td>
+                    <td style="border-right: 0px;border-top: 0px">{!agreement.PropertyAddress__c &' '& agreement.PropertyHomeNo__c}</td>      
+                </tr>
+                
+           </table>
+        </div>
+     <div style="clear: both"></div>
+    <div  style="width:100px; margin-top: 20px;font-size: 13px">
+           お支払いスケジュール　　（下記金額には消費税等を含みます。）   
+        </div>
+               
+        <table class="tableA" cellspacing="0">
+                <tr style="height:25px;">
+                    <td width="6%"   class="bottomb">回数</td>
+                    <td width="18%"  class="bottomb textcenter">支払期日</td>
+                    <td width="38%"  class="bottomb textcenter">対象期間</td>
+                    <td width=""     class="bottomb textcenter">支払金額</td>
+                    <td width=""     class="bottomb textcenter" style="border-right:0px">支払残額</td>
+                </tr>    
+             <apex:variable var="index"  value="{!1}"/> 
+             <apex:repeat value="{!shiharaisA }" var="s">
+                  <tr style="height:22px; background-color: {!if(mod(s.Count__c,2)==0 && s.Count__c!=null ,'#d0d0d0','')}">
+                    <td class="textcenter rightb">
+                    {!s.Count__c }
+                           <font style="font-size: 10px;">
+                             <apex:outputText value="※"  rendered="{!and(s.Count__c ==1,agreement.UpdateCnt__c==0)}">                              
+                            </apex:outputText>
+                          </font> 
+                    </td>
+                    <td class="textcenter rightb">
+                        <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}" rendered="{!s.KijitsuDate__c!=null}">
+                            <apex:param value="{!s.KijitsuDate__c }" />
+                        </apex:outputText>
+                     </td> 
+                     <td class="textcenter rightb">
+                          <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}～" rendered="{!s.BilledKikanStart__c!=null}">
+                             <apex:param value="{!s.BilledKikanStart__c }" />
+                          </apex:outputText>  
+                          <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}" rendered="{!s.ReturnBilledKikanEnd__c!=null}">
+                              <apex:param value="{!s.ReturnBilledKikanEnd__c }" />
+                          </apex:outputText>  
+                      </td>
+                    <td class="textright rightb">
+                      <apex:outputText value="{0, number, ￥###,###,###}">
+                               <apex:param value="{!s.Payment__c }" />
+                      </apex:outputText>
+                    </td>
+                    <td  class="textright">
+                        <apex:outputText value="{0, number, ￥###,###,###}">
+                               <apex:param value="{!s.PaymentBalance__c  }" />
+                        </apex:outputText>
+                    </td>
+                </tr> 
+                <apex:variable var="index" value="{!index+1}" />
+           </apex:repeat>                
+        </table>
+   
+   
+         <table class="tableA"  style="border-right: solid 1.5px #000;" cellspacing="0">
+                <tr style="height:25px;">
+                    <td width="6%"   class="bottomb textcenter">回数</td>
+                    <td width="18%"  class="bottomb textcenter">支払期日</td>
+                    <td width="38%"  class="bottomb textcenter">対象期間</td>
+                    <td width=""     class="bottomb textcenter">支払金額</td>
+                    <td width=""     class="bottomb textcenter" style="border-right:0px">支払残額</td>
+                </tr>          
+                <apex:repeat value="{!shiharaisB }" var="s">
+                  <tr   style="height:22px; background-color: {!if(mod(s.Count__c,2)==0 && s.Count__c!=null ,'#d0d0d0','')}">
+                    <td class="textcenter rightb">{!s.Count__c }</td>
+                    <td class="textcenter rightb">
+                        <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}" rendered="{!s.KijitsuDate__c!=null}">
+                            <apex:param value="{!s.KijitsuDate__c }" />
+                        </apex:outputText>
+                    </td>   
+                    <td class="textcenter rightb">   
+                         <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}～" rendered="{!s.BilledKikanStart__c!=null}">
+                            <apex:param value="{!s.BilledKikanStart__c }" />
+                        </apex:outputText> 
+                        <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}" rendered="{!s.ReturnBilledKikanEnd__c!=null}">
+                            <apex:param value="{!s.ReturnBilledKikanEnd__c }" />
+                        </apex:outputText>   
+                    </td>
+                    <td class="textright rightb">
+                         <apex:outputText value="{0, number, ￥###,###,###}">
+                               <apex:param value="{!s.Payment__c }" />
+                         </apex:outputText>
+                    </td>
+                    <td class="textright" >
+                       <apex:outputText value="{0, number, ￥###,###,###}">
+                               <apex:param value="{!s.PaymentBalance__c  }" />
+                        </apex:outputText>
+                    </td>
+                </tr>    
+            </apex:repeat>                 
+        </table>
+        <div style="clear:both"></div>
+          
+          <div></div>
+          <div style="margin-top: 6px;font-size: 11.5px">
+             ※ お支払期日が金融機関のお休みの場合、お支払期日はその直後の金融機関営業日となります。
+          </div>
+</body>
+</html>
+
+</apex:page>

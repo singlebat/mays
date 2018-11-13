@@ -1,0 +1,596 @@
+<apex:page showHeader="false" controller="keiyakuPDFController" standardStylesheets="false" applyHtmlTag="false"  docType="html-5.0" renderAs="PDF">
+<html>
+    <head>
+        <style>
+       
+            body {
+                font-family: "Microsoft YaHei","lucida grande",Arial Unicode MS,"ＭＳ ゴシック" ;
+                font-size: 13px;
+                margin:0 0;
+            }
+                .divsty{float:right;border-bottom: solid 0.5px #000}
+                .textleft{text-align: left;padding-left: 4px}
+                .textright{text-align: right;padding-right: 2px}
+
+                table.table1  {border:solid 1.08px #000;text-align: center;}
+                table.table1  td{border: solid 0.3px #000;height: 22px;padding-left:4px}
+                table.table1 td.tdb{border-left: 0px;border-right: 0px;border-bottom: 0px;border-top:solid 1.2px #000;}
+
+                table.table2  {border-collapse: collapse;text-align: left;}
+
+                table.table2  td{border:solid 0px #000;height: 18px;padding-left:4px}
+
+               .tdtop{border-top:solid 1.2px #000;} 
+               
+               .textleft{text-align: left;}
+               .textright{text-align: right;padding-right: 2px}
+               .textcenter{text-align:center}
+
+               .page-break-after{page-break-after: always;}
+
+                table.tablehe  {
+
+                    border-top:solid 1.08px #000;
+                    border-right:solid 1.08px #000;
+                     -fs-table-paginate: paginate;
+                    
+                     }
+                     table.tablehe  tr{
+                         page-break-inside: avoid;
+                     }
+                table.tablehe td{border: solid 0.3px #000;height: 22px;text-align: center;}
+                table.tablehe td.tdb{border-bottom:solid 1.08px #000;}
+
+
+                .titleposition {
+                    position: absolute;
+                }
+
+
+                .logoposition {
+                    position: absolute;
+                    right: 0px;
+                    top: 110px;
+                }
+
+                .titlebango{
+                    position: absolute;
+                    top: 1.1cm;
+                }
+
+                .page-break-inside {
+                    page-break-inside: avoid;
+                }
+
+        </style>
+        <style type="text/css" media="print">
+          @page :first {
+            size: 21.0cm 29.7cm;
+            margin-top: 7.9cm;
+            margin-left: 1.0cm;
+            margin-right: 1.0cm;
+            margin-bottom: 0.9cm;
+            @bottom-center {
+                content: element(footer);
+            }
+            @top-center {
+                content: element(head1);
+            }
+        }
+
+        @page {
+            size: 21.0cm 29.7cm;
+            margin-top: 6.5cm;
+            margin-left: 1.0cm;
+            margin-right: 1.0cm;
+            margin-bottom: 0.9cm;
+
+            @bottom-center {
+                content: element(footer);
+            }
+
+            @top-center {
+                content: element(head2);
+            }
+
+            thead {
+                display: table-header-group;
+            }
+        }
+
+
+        div.head2{
+            position: running(head2);
+        }
+        
+
+        div.head1{
+            position: running(head1);
+        }
+
+        div.footer {
+            display: block;
+            font-size: 11px;
+
+            padding-bottom: 15px;
+            text-align: right;
+            position: running(footer);
+        }
+            
+        .page-break-after {
+            page-break-after: always;
+        }
+
+          .pagenumber:before {
+        content: counter(page);
+    }
+
+    .pagecount:before {
+        content: counter(pages);
+    }
+
+
+
+        </style>
+    </head>
+
+    <body> 
+      <div class="footer">
+          <span class="pagenumber"/> / <span class="pagecount"/>
+      </div>
+	<div class="head1">
+
+		<!--title-->
+		<div class="titleposition" style="top: 2.0cm; width: 100%; height: 20px; text-align: center; font-size: 25px;">
+			<apex:outputText rendered="{!pdftype == 'Contract'}"> 
+				<div>LEASE CONTRACT</div>
+			</apex:outputText>
+			<apex:outputText rendered="{!pdftype == 'Oboegaki'}"> 
+				<div>AMENDMENT</div>
+			</apex:outputText>
+		</div>
+
+		<!--番号-->
+		<div class="titlebango" style="height: 40px; width: 100%;">
+			<div style="height: 20px; font-size: 13.5px; text-align: right">
+				Contract No.&nbsp;&nbsp;
+				<div class="divsty" style="width: 140px; height: 18px; text-align: left">{!agreement.Name}</div>
+			</div>
+		</div>
+
+
+		<!--左-->
+		<div class="titleposition" style="top: 4cm; width: 100%">
+             <div style="font-size: 13.5px">
+				<div style="height: 14px; margin-top: 10px; margin-left: 30px;">
+					<apex:outputText rendered="{!pdftype == 'Contract'}"> 
+					    The Lessor hereby agrees to lease to the Lessee the items set forth in the attached ITEM LIST on the terms<br/>
+						and conditions set forth hereinafter and the Lessee agrees to pay the Lease Fee for the said Items at the rates<br />
+						hereinafter set forth.Both parties shall sign this contract thereby evidecing their intent to be bound.<br/>
+						This contract including the ITEM LIST shall be executed in duplicate originals with each party receiving<br/>
+						a executed original.
+					</apex:outputText>
+					<apex:outputText rendered="{!pdftype == 'Oboegaki'}"> 
+						The lessor May's Corporation (hereinafter called the "Company") and the lessee (as described in the lease Summary)
+						have made this Amendment for the lease as stated in below in duplicate and have affixed their<br/> names and seals,each
+						holding one copy.
+					</apex:outputText>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="titleposition"
+			style="width: 100%; top: 6cm; font-size: 13.5px">
+			<div style="font-size: 13px">
+				<div style="margin-left: 40px; margin-top: 70px; width: 200px;">Lessor:</div>
+				<div style="margin-left: 180px; margin-top: 10px; width: 200px;">3-2-2Toranomon,Minato-ku,Tokyo</div>
+				<div style="margin-left:220px; width: 200px;">Toranomon30Mori Bldg. 1F,</div>
+				<div style="margin-left: 180px; width: 200px;"> May's Corporation</div>
+				<div style="margin-left: 180px; width: 200px;">代表取締役　　　 佐藤 　倫太郎</div>
+				<div style="margin-left: 40px; margin-top: 20px; width: 200px;">Lessee:</div>
+			</div>
+		</div>
+
+
+		<div class="titleposition" style="top: 6.7cm; right: 0px">
+			<div style="float: right; font-size: 13.5px">
+				<apex:outputText value="{0,date,yyyy}/{0,date,M}/{0,date,d}">
+					<apex:param value="{!agreement.TeiketuDay__c}" />
+				</apex:outputText>
+			</div>
+		</div>
+
+
+	</div>
+
+	<table class="table1" style="width:100%;margin-top: 260px;font-size: 13.5px" cellspacing="0">  
+       		<tr>
+       		   <td style="font-size:20px" colspan="7"> The Outline of the Lease Contract(The Outline)</td>
+       		</tr>       
+            <tr>
+                <td width="22%" colspan="2">Lessee</td>
+                <td width="%" colspan="4" class="textleft">&nbsp;A 　{!agreement.Contractors__c}</td>  
+            </tr>
+             <tr>
+                <td style="border-bottom: 0px" colspan="2"> Area of Placement</td>
+                <td colspan="4" class="textleft" style="border-bottom: 0px">&nbsp;B　{!agreement.PropertyAddress__c  &'　'&  agreement.PropertyHomeNo__c}<br/>
+                   
+               </td> 
+            </tr>
+             <tr>
+                <td style="border-top: 0px" colspan="2"></td>
+                <td colspan="4" class="textleft" style="border-top: 0px">　　　{!agreement.UserNew__c}</td>  
+            </tr>
+             <tr>
+                <td  colspan="2"> Term</td>
+                <td  colspan="4" class="textleft">&nbsp;C　From&nbsp;&nbsp;
+                <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}">
+                <apex:param value="{!agreement.LeaseStart__c}"/>
+                </apex:outputText>
+                　　　　To&nbsp;&nbsp;
+                <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}">
+                <apex:param value="{!agreement.LeaseEnd__c}"/>
+                </apex:outputText>
+                </td>            
+            </tr>
+            <tr>
+                <td style="border-bottom: 0px;" colspan="2">Lease Fee</td>
+                <td class="textleft" style="width:26%;border-bottom: 0px" colspan="2">&nbsp;D　Monthly　Lease　Fee:</td>
+                <td class="textcenter" style="width:26%;" colspan="1">Consumption　Tax:</td>
+                <td class="textcenter" style="width:26%;" colspan="1">Total:</td>
+            </tr>
+            <tr>
+                <td style="border-top: 0px;" colspan="2"></td> 
+                <td style="margin-top: 0px;border-top: 0px" colspan="2" class="textright">
+                    <apex:outputField value="{!agreement.MonthlyLeaseFeeTotal2__c}"/>
+                </td> 
+                <td style="" colspan="1" class="textright"> 
+                    <apex:outputField value="{!agreement.MonthlyLeaseFeeTax__c}"/>
+                </td> 
+                <td style="" colspan="1" class="textright"> 
+                    	￥<apex:outputText value="{0, Number, ###,###,##0}"> <apex:param value="{!agreement.MonthlyLeaseFeeTotal2__c + agreement.MonthlyLeaseFeeTax__c}" /> </apex:outputText>
+                </td>  
+            </tr>
+            
+            <tr>
+                <td style="border-bottom: 0px" colspan="2" >Payment Method</td>
+                <td class="textleft" style="border-bottom: 0px" colspan="4">&nbsp;E 　{!agreement.PaymentMethod__c}</td>
+            </tr>
+             <tr>
+                <td style="border-top: 0px" colspan="2"></td>
+                <td class="textleft" style="border-top: 0px" colspan="4"></td>
+            </tr>
+
+			<apex:outputText rendered="{!pdftype == 'Contract'}">  
+             <tr>
+                <td style="font-size:10px;line-height:8px" rowspan="8" width="4%">
+                	<div>
+                	C<br/>o<br/>
+                	n<br/>t<br/>
+                	r<br/>a<br/>
+                	c<br/>t<br/>
+                	
+                	&nbsp;<br/>A<br/>
+                	c<br/>c<br/>
+                	e<br/>p<br/>
+                	t<br/>a<br/>
+                	n<br/>c<br/>
+                	e<br/>&nbsp;<br/>
+                	F<br/>e<br/>
+                	e<br/>
+                	</div>
+                </td>
+                <td class="textcenter"  style="">Delivery and Removal Fees</td>  
+                <td class="textleft"    style="border-right: 0px" colspan="3">&nbsp;F  　　　</td> 
+                <td class="textright"  style="border-left: 0px" colspan="1">
+                     <apex:outputField value="{!agreement.Estimate__r.DeliveryFeeSum__c}"/>
+                </td> 
+               
+            </tr>
+             <tr>
+               
+                <td class="textcenter"  style="">installation Fees</td>  
+                <td class="textleft"    style="border-right:0px" colspan="3">&nbsp;G  　　　</td> 
+                <td class="textright"  colspan="1" style="border-left:0px ">
+                     <apex:outputField value="{!agreement.Estimate__r.SetupFeeSum__c}"/>
+                </td> 
+            </tr>
+             <tr>
+              
+                <td class="textcenter" style="">Miscellaneous Fees</td>  
+                <td class="textleft"  style="border-right:0px" colspan="3">&nbsp;H  　　　</td> 
+                <td class="textright" style="border-left:0px" colspan="1">
+                     <apex:outputField value="{!agreement.Estimate__r.OtherFeeSum__c}"/>
+                </td> 
+            </tr>
+              <tr>
+               
+                <td class="textcenter"  style="">＜Sub Total＞</td>  
+                <td class="textleft"  style="border-right:0px" colspan="3">&nbsp;I  　　　「F + G + H」  </td> 
+                <td class="textright" style="border-left:0px" colspan="1">
+                   <apex:outputField value="{!agreement.CostSum2__c}"/>
+                </td> 
+            </tr>
+              <tr>
+               
+                <td class="textcenter"  style="">Consumption Tax</td>  
+                <td class="textleft"  style="border-right:0px" colspan="3">&nbsp;J  </td> 
+                <td class="textright" style="border-left:0px" colspan="1">
+                    <apex:outputField value="{!agreement.CostTotalTax__c}"/>
+                </td> 
+            </tr>
+              <tr>
+              
+               
+                <td class="textcenter"  style="">Security Deposit</td>  
+                <td class="textleft"  style="border-right:0px" colspan="3">&nbsp;K 　　　月額リース料の{!agreement.DepositMonth__c}ヶ月分相当</td> 
+                <td class="textright" style="border-left:0px " colspan="1">
+                   <apex:outputField value="{!agreement.Hoshokin__c}"/>
+                </td>
+            </tr>
+              <tr>
+               
+                <td class="textcenter"  style="">Initial Lease Fees</td>  
+                <td class="textleft" style="border-right:0px" colspan="3">&nbsp;L　　　 （
+                         <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}～">
+                	         <apex:param value="{!agreement.LeaseStart__c}"/>
+               		     </apex:outputText>
+                         <apex:outputText value="{0,date,yyyy/}{0,date,MM/}{0,date,dd}">
+                	        <apex:param value="{!agreement.Estimate__r.FirstKikanTo1__c}"/>
+               		    </apex:outputText>）
+                </td> 
+                <td class="textright" style="border-left:0px " colspan="1">
+                    <apex:outputText value="{0, number,￥###,###,##0}">
+                        <apex:param value="{!agreement.shokaileasefee__c + agreement.SyokaiLeaseTax__c}" />  
+                    </apex:outputText>
+                </td> 
+            </tr>
+              <tr>
+               
+                <td class="textcenter"  style="">《Grand Total》</td>  
+                <td class="textleft" style="border-right:0px" colspan="3">&nbsp;M　　　「I + J + K + L」</td> 
+                <td class="textright" style="border-left:0px " colspan="1">
+                     <apex:outputField value="{!agreement.TotalAcceptanceUponContract__c}"/>
+                </td> 
+            </tr>   
+            </apex:outputText>       
+        </table>
+        <apex:outputText rendered="{!pdftype == 'Oboegaki'}">
+				<div style="margin-top: 29px">
+					<div style="font-size: 13px;">(1)This Amendment can be cancelled at any point without any penalties,however,3 weeks advance notice is neccessary.</div>
+				</div>
+				<div style="margin-top: 10px; font-size: 13px;">
+					<div style="width: 270px; float: left;">(2) All other content of the original contractNo. </div>
+					<div style="width: 100px; border-bottom: solid 0.5px #000; float: left; margin-left: 0px; height: 18px">
+						{!ParentAgreementName}
+					</div>
+					<div style="width: 360px; margin-left: 350px;">,not amended in the Amendment shall remain effective.</div>
+				</div>
+         </apex:outputText>        
+       	 <div class="page-break-after"></div>
+  <div class="head2">
+  
+        <div class="titleposition" style="top: 2.0cm;width: 100%;height: 20px;text-align: center;font-size:25px;">
+            <div>CONTRACT ITEM LIST</div>      
+        </div>
+
+
+
+       <div style=""  class="logoposition" >
+             <img   src="{!$Resource.logoPDF}" width="65" height="29" style="margin-left: 15px"/>
+             <span style="font-size: 17px;display: block ;margin-top: -35px;margin-left: 100px">May's Corporation</span>
+        </div>
+      <div class="titlebango" style="height: 40px;width: 100%;">
+        <div style="width:220px;height:20px;font-size: 13.5px;">Contract No.
+            <div class="divsty"  style="width:130px;height:17px">{!agreement.Name}</div>
+        </div>
+     </div>
+        
+    <div class="titleposition"  style="width: 100%;top:3.5cm;font-size: 13px">
+        <div style="width:460px;height:20px;margin-top:30px">
+       Name<div class="divsty" style="width:390px;height:15px">{!agreement.UserNew__c}</div> 
+        </div>
+        <div style="width:460px;height:20px;margin-top: 30px">
+       Company<div class="divsty" style="width:390px;height:15px">{!agreement.Contractors__c}</div> 
+        </div>
+    </div>
+    <div  class="titleposition"  style="top:6.2cm;font-size: 13px;right:0px" >
+        <div style="width:230px;float:right;margin-top: -75px">
+            <table class="table2" style="width:100%;line-height: 85%;font-size: 13px;" cellspacing="0">
+                <tr>
+                    <td width="65%">Lease Period Start</td>
+                    <td style="line-height: 35%">
+                         <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}">
+                            <apex:param value="{!agreement.LeaseStart__c}"/>
+                         </apex:outputText>
+                    </td>
+                </tr>
+                 <tr>
+                    <td style="line-height: 85%">Lease Period End</td>
+                    <td>
+                        <apex:outputText value="{0,date,yyyy}/{0,date,MM}/{0,date,dd}">
+                            <apex:param value="{!agreement.LeaseEnd__c}"/>
+                         </apex:outputText>
+                    </td>
+                </tr>
+                 <tr>
+                    <td style="line-height: 85%">Lease Months</td>
+                    <td>
+                       {!agreement.LeaseMonth__c}&nbsp;Months
+                    </td>
+                </tr>
+                 <tr>
+                    <td style="line-height: 85%">Lease %Per Month</td>
+                    <td>
+                      {!agreement.MonthlyLeaseRate__c}%
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+  </div>
+
+        
+        <table class="tablehe" style="width:100%;margin-top:15px;font-size: 11.5px"  cellspacing="0"> 
+        <thead>
+            <tr>
+                <td width="7%" style="border-left:solid 1.08px #000;">Code No.</td>
+               
+                <td width="3%" >U<br/>N</td>
+                <td width="22%">Items</td>
+                <td width="15%">Maker</td>
+                <td width="25%">Specifications</td>
+                <td>Amount</td>
+                <td>Lease<br/>Value</td>
+                <td>Monthly<br/>Fee</td>
+            </tr>
+       </thead>
+           <!-- <apex:variable var="total1" value="{!0}"/>
+            <apex:variable var="total2" value="{!0}"/>-->
+        <tbody>
+            <apex:repeat value="{!agreement.InventoryOpportunityProduct__r}" var="product">
+                <tr style="">
+                    <td  style="border-left:solid 1.08px #000;">{!product.InventoryProduct__r.Name}</td>
+                   
+                    <td>
+                        {!product.OpportunityProduct__r.U_N__c}
+                    </td>
+                    <td style="text-align: left;padding-left: 3px;font-size: 10.5px" >
+                    {!product.OpportunityProduct__r.Name}                       
+                    </td>
+                    <td style="text-align: left;padding-left: 3px;">
+                    {!product.OpportunityProduct__r.Maker__c}                     
+                    </td>
+                    <td style="text-align: left;padding-left: 3px;font-size: 10.5px">
+                    {!product.OpportunityProduct__r.ModelTotal__c}                    
+                    </td>
+                    <td style="text-align: right;padding-right: 3px">
+                        <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!product.MakerPrice__c}" />  
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: right;padding-right: 3px">
+                    	<apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!product.UnitPriceLease__c}" />  
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: right;padding-right: 3px">
+                    	<apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!product.EachMonthlyLeaseFee__c}" />  
+                        </apex:outputText>
+                    </td>
+                </tr>
+
+  <!--  <apex:variable var="total1" value="{!if(product.ProductListPrice__c==null,total1,total1 + product.ProductListPrice__c)}" />       
+    <apex:variable var="total2" value="{!if(product.AmountPercentLease__c==null,total2,total2 + product.AmountPercentLease__c)}"/> -->
+            </apex:repeat>
+
+            <tr>
+                <td colspan="4" style="border-left: 0px;border-bottom: 0px;">
+                </td>
+                 <td class="tdb">
+                 Total
+                </td>
+                <td class="tdb" style="text-align: right;padding-right: 3px">
+                    <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.ProductListPriceTotal__c}" />  
+                    </apex:outputText>
+                </td>
+                <td class="tdb" style="text-align: right;padding-right: 3px">
+                    <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.AmountPercentLeaseTotal__c}" />  
+                    </apex:outputText>
+                </td>
+                <td class="tdb" style="text-align: right;padding-right: 3px">
+                    <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.MonthlyLeaseFeeTotal2__c}" />  
+                    </apex:outputText>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+          
+        
+    <div style="margin-top:20px">
+        <div style="float:left;width:260px" >
+             <table class="table1" style="width:100%;" cellspacing="0">
+            	<tr>
+                	<td width="70%" class="textleft"> Monthly lease Fee</td>
+                	<td width="30%"  class="textright">
+                    
+                     <apex:outputText value="{0, number,###,###,##0}">
+                         <apex:param value="{!agreement.MonthlyLeaseFeeTotal2__c}" />  
+                     </apex:outputText>  
+                    </td>
+           		 </tr>
+            	<tr>
+                	<td class="textleft">Consumption Tax</td>
+                	<td  class="textright">
+                        <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.MonthlyLeaseFeeTax__c}" />  
+                        </apex:outputText> 
+                    </td>
+            	</tr>  
+           	 	<tr>
+                	<td class="textleft">Total monthly Fee</td>
+                	<td class="textright">
+                        <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.MonthlyLeaseFeeTotal2__c +  agreement.MonthlyLeaseFeeTax__c}" />  <!--{!productlist.SalesCost__c}-->
+                        </apex:outputText> 
+                    </td>
+            	</tr>
+            </table>
+        </div>
+        
+        <div style="float:left;margin-left:25px;width:220px" >
+        <apex:outputText rendered="{!pdftype == 'Contract'}">
+		       <table class="table1" width="100%" cellspacing="0" >
+		            <tr>
+		                <td width="70%" class="textleft" style="font-size:10px">  Delivery and Removeal Fees</td>
+		                <td width="30%" class="textright">
+		                    <apex:outputText value="{0, number,###,###,##0}">
+		                           <apex:param value="{!agreement.Estimate__r.DeliveryFeeSum__c}" /> 
+		                    </apex:outputText>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td class="textleft">Installation Fees</td>
+		                <td  class="textright">
+		                    <apex:outputText value="{0, number,###,###,##0}">
+		                           <apex:param value="{!agreement.Estimate__r.SetupFeeSum__c}" />  
+		                    </apex:outputText>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td class="textleft">Other Fees</td>
+		                <td class="textright">
+		                    <apex:outputText value="{0, number,###,###,##0}">
+		                           <apex:param value="{!agreement.Estimate__r.OtherFeeSum__c}" />  
+		                    </apex:outputText>
+		                </td>
+		            </tr>
+		        </table>
+        </apex:outputText>   
+        </div>
+        <div style="float:right;width:180px">
+        <apex:outputText rendered="{!pdftype == 'Contract'}">
+            <table class="table1" style="width:100%;" cellspacing="0">
+            	<tr>
+                	<td width="45%" class="textleft"> Security</td>
+                	<td width="55%" class="textright">
+                        <apex:outputText value="{0, number,###,###,##0}">
+                           <apex:param value="{!agreement.Hoshokin__c}" />  <!--{!productlist.SalesCost__c}-->
+                        </apex:outputText>
+                    </td>
+           		 </tr>
+            </table>
+        </apex:outputText>  
+        </div>
+    </div>
+ 
+</body>
+</html>
+</apex:page>

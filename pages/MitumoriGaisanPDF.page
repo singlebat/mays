@@ -1,0 +1,728 @@
+<apex:page showHeader="false" controller="MitumoriPdfController" standardStylesheets="false" applyHtmlTag="false" docType="html-5.0" renderAs="PDF">
+    <html>
+
+    <head>
+        <!--new-->
+        <style>
+        .divpage {
+            margin-top: 10px;
+            padding-left: 580px
+        }
+
+        body {
+            font-family: Arial Unicode MS;
+            font-size: 12px;
+            margin-top: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+
+        }
+        .printItem {
+            position: absolute;
+        }
+
+        .printItem1 {
+            position: relative;
+        }
+
+        pre {
+            font-family: Arial Unicode MS;
+            font-size: 12px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+
+        table.tablea {
+            border: solid 1.08px #000;
+        }
+
+        table.tablea tr {
+            height: 22px;
+        }
+
+        table.tablea td {
+            border: solid 0.3px #000;
+        }
+
+        table.tabledan {
+            border:  solid 1.5px #000;
+        }
+
+        table.tabledan td {
+            border: solid 0.7px #000;
+            height: 22px;
+            font-size: 15px
+        }
+
+        table.tableyin {
+            border: 0.7px solid #000;
+            width: 120px;
+            height: 81px
+        }
+
+        table.tableyin td {
+            border: solid 0.7px #000;
+        }
+
+
+        .fontsize {
+            font-size: 15px
+        }
+
+
+
+        table.tabled tr {
+            height: 19px;
+            text-align: center;
+
+        }
+
+        table.tablemeisi {
+            border-top: solid 1.08px #000;
+            border-right: solid 1.08px #000;
+            -fs-table-paginate: paginate;
+/*            border-collapse: collapse;
+            border-spacing: 0;*/
+        }
+
+        table.tablemeisi td {
+            border: solid 0.4px #000;
+        }
+
+        table.tablemeisi tr{
+
+           page-break-inside: avoid;
+        }
+
+
+
+        .tablesita {
+            border-left: solid 1.2px #000;
+            border-bottom: solid 1.2px #000;
+            border-right: solid 1.2px #000;
+        }
+
+        .tablesita td {
+            border: solid 0.5px #000;
+        }
+
+
+        .tcenter {
+            text-align: center;
+        }
+
+        .textright {
+            text-align: right;
+            padding-right: 2px
+        }
+
+        .textleft {
+            text-align: left;
+            padding-left: 2px
+        }
+
+    
+
+        .page-break {
+            page-break-before: always;
+            width: 18cm;
+            height: 20cm;
+            margin-left: 1.5cm;
+        }
+
+        .page-break-after {
+            page-break-after: always;
+        }
+
+        .page-break-inside {
+            page-break-inside: avoid;
+        }
+
+
+         .titleposition {
+            position: absolute;
+        }
+
+        .logoposition {
+            position: absolute;
+            right: 0px;
+            top: 110px;
+        }
+
+
+        .titlebango{
+            position: absolute;
+            top: 1.1cm;
+        }
+
+        .divsty{float:right;border-bottom: solid 0.5px #000}
+
+
+        </style>
+    <style type="text/css" media="print">
+    @page :first {
+        size: 21.0cm 29.7cm;
+        margin-top: 7.9cm;
+        margin-left: 1.0cm;
+        margin-right: 1.0cm;
+        margin-bottom: 0.9cm;
+        @bottom-center {
+            content: element(footer);
+        }
+        @top-center {
+            content: element(head1);
+        }
+    }
+
+    @page {
+        size: 21.0cm 29.7cm;
+        margin-top: 7.2cm;
+        margin-left: 1.0cm;
+        margin-right: 1.0cm;
+        margin-bottom: 0.9cm;
+
+        @bottom-center {
+            content: element(footer);
+        }
+
+        @top-center {
+            content: element(head2);
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+
+    }
+
+    div.head1{
+        position: running(head1);
+    }
+
+    div.head2{
+        position: running(head2);
+    }
+
+    div.footer {
+        display: block;
+        font-size: 11px;
+        
+        padding-bottom: 15px;
+        text-align: right;
+        position: running(footer);
+    }
+
+    .pagenumber:before {
+        content: counter(page);
+    }
+
+    .pagecount:before {
+        content: counter(pages);
+    }
+    </style>
+    </head>
+
+    <body>
+    <div class="footer">
+      <span class="pagenumber"/> / <span class="pagecount"/>
+    </div>
+      <div class="head1" style="">
+
+       <div class="titlebango" style="height: 40px;width: 100%;">
+            <div style="height:20px;font-size: 13.5px;text-align:left;float:left">見積番号&nbsp;&nbsp;       
+            </div>
+            <div class="divsty"  style="width:140px;height:18px;text-align: left;float:left;margin-left: 5px">{!mitumori.Name}</div>
+        </div> 
+
+            <div class="titlebango" style="height: 40px;width: 100%;">
+                
+                <div style="float:right;text-align: right;font-size:13px;">見積日&nbsp;&nbsp;
+                    <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+                        <apex:param value="{!mitumori.EstimatedDate__c}" />
+                    </apex:outputText>
+                </div>
+                <div  style="text-align: right;margin-top:20px;font-size:13px;">見積有効期限&nbsp;&nbsp;
+                    <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+                        <apex:param value="{!mitumori.ExpirationDate__c}" />
+                    </apex:outputText>
+                </div>
+            </div>
+
+            <div class="titleposition" style="top: 2.0cm;width: 100%;height: 20px;text-align: center;font-size:25px;">
+                <div>概算見積書</div>
+                <div style="font-size:13px;margin-top: 5px">{!mitumori.SubTitle__c}</div>
+            </div>
+
+
+            <div class="titleposition" style="width: 100%;top:3.4cm;font-size: 13px">
+                <div style=" width:330px; margin-top:5px;margin-left: -4px">
+                    <div style="float:right;">様</div>
+                    <div style="float:right;border-bottom:0.5px solid #000;width:240px">
+                        {!mitumori.Account__c} 　　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px"> 契約者名</div>
+                    <div style="clear:both"></div>
+                </div>
+                <div style=" width:250px; margin-left: 0px;">　　　　　   	&nbsp;({!mitumori.Account_number__c})</div>
+                <div style=" width:100px; margin-top: 6px;">下記のとおり御見積申し上げます。</div>
+             
+                 <div style=" width:330px; margin-top:20px;margin-left: -4px">                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.UserNewName__c}　　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">使用者名</div>
+                    <div style="clear:both"></div>
+                </div>
+
+                <div style="width:330px; margin-top:5px;margin-left: -4px">
+                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.PropertyAddress__c}　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">設置場所</div>
+                    <div style="clear:both"></div>
+                </div>
+                <div style="width:330px; margin-top:5px;margin-left: -4px">
+                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.PropertyHomeNo__c}　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">　　　　</div>
+                    <div style="clear:both"></div>
+                </div>
+
+              
+            </div>
+
+<!-- logo -->
+   			<div class="printItem" style="position: relative;margin-left:520px;font-size:11.5px;margin-top:30px;">
+            	<div style="z-index:399;position:relative;margin-top:0px">
+             	<p style="z-index:399;font-size:17px;">
+             	<img style="z-index:399;position:relative;margin-top:-5px" src="{!$Resource.logoPDF}" width="65px"  />&nbsp; 株式会社 メイズ
+             	</p>
+            	</div>
+                <div style="z-index:399;position:relative;margin-top:-20px">
+                 	〒105-0001<br/>
+                 	 東京都港区虎ノ門3-2-2<br/>
+                 	 　　　　　　　　　虎ノ門30森ビル1階
+                 	 TEL:03-5402-4600　Fax:03-5402-4660
+                </div>
+                <div style="z-index:999;margin-top:-20px;">
+                	<img style="position:relative;margin-top:-250px;margin-left:120px;width:80px;height:80px;" src="{!$Resource.newshain}"/>
+                </div>
+            </div>
+          
+          
+            <table cellspacing="0" class="titleposition tableyin" style="right:0px;bottom:0px">
+                <tr>
+                    <td style="height:22px" class="tcenter">承認印</td>
+                    <td class="tcenter">担当印</td>
+                </tr>
+                <tr>
+                    <td style="height:55px">
+                        <apex:outputtext rendered="{!and(mitumori.QuotationStatus__c != '見積' , mitumori.QuotationStatus__c != '無効')}">
+                            <img style="width: 100%;height: 100%;" src="{!left($Api.Partner_Server_URL_350 ,FIND('/services/Soap/', $Api.Partner_Server_URL_350)) + 'resource/' + lastActorName}" />
+                        </apex:outputtext>
+                    </td>
+                    <td style="height:55px">
+                        <img style="width: 100%;height: 100%;" src="{!left($Api.Partner_Server_URL_350 ,FIND('/services/Soap/', $Api.Partner_Server_URL_350)) + 'resource/' + createdUserName}" />
+                    </td>
+                </tr>
+            </table>
+        
+      </div>
+  
+
+      <div class="head2">
+          <div class="titlebango" style="height: 40px;width: 100%;">
+            <div style="height:20px;font-size: 13.5px;text-align:left;float:left">見積番号&nbsp;&nbsp;       
+            </div>
+            <div class="divsty"  style="width:140px;height:18px;text-align: left;float:left;margin-left: 5px">{!mitumori.Name}</div>
+        </div> 
+         
+            <div class="titleposition" style="top: 2.0cm;width: 100%;height: 20px;text-align: center;font-size:25px;">
+                <div>見積商品明細</div>
+                <div style="font-size:13px;margin-top: 5px">{!mitumori.SubTitle__c}</div>
+            </div>
+   
+
+        <div class="titleposition" style="width: 100%;top:3.6cm;font-size: 13px">
+         
+           <div style=" width:330px; margin-top:0px;margin-left: -4px">                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                        {!mitumori.Account__c} 様　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">契約者名</div>
+                    <div style="clear:both"></div>
+                </div>
+          
+                <div style=" width:330px; margin-top:5px;margin-left: -4px">                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.UserNewName__c}　　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">使用者名</div>
+                    <div style="clear:both"></div>
+                </div>
+
+                <div style="width:330px; margin-top:5px;margin-left: -4px">
+                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.PropertyAddress__c}　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">設置場所</div>
+                    <div style="clear:both"></div>
+                </div>
+                <div style="width:330px; margin-top:5px;margin-left: -4px">
+                    
+                    <div style="float:right;border-bottom:0.5px solid #000;width:254px">
+                       {!mitumori.PropertyHomeNo__c}　　　　　　
+                    </div>
+                    <div style="float:right;margin-right: 18px">　　　　</div>
+                    <div style="clear:both"></div>
+                </div>
+          </div>
+
+<div class="printItem" style="position: relative;margin-left:520px;font-size:11.5px;margin-top:30px;">
+            	<div style="z-index:399;position:relative;margin-top:0px">
+             	<p style="z-index:399;font-size:17px;">
+             	<img style="z-index:399;position:relative;margin-top:-5px" src="{!$Resource.logoPDF}" width="65px"  />&nbsp; 株式会社 メイズ
+             	</p>
+            	</div>
+                <div style="z-index:399;position:relative;margin-top:-20px">
+                 	〒105-0001<br/>
+                 	 東京都港区虎ノ門3-2-2<br/>
+                 	 　　　　　　　　　虎ノ門30森ビル1階
+                 	 TEL:03-5402-4600　Fax:03-5402-4660
+                </div>
+                <div style="z-index:999;margin-top:-20px;">
+                	<img style="position:relative;margin-top:-250px;margin-left:120px;width:80px;height:80px;" src="{!$Resource.newshain}"/>
+                </div>
+            </div>
+    </div>
+
+
+            <div style="height:500px;">
+                <div style="width:46%;float:left">
+                    <div style="font-size:15px;margin-top: 10px">＜契約内容＞</div>
+                    <table class="tablea" cellspacing="0" style="width:100%;font-size: 12px;">
+                        <tr>
+                            <td class="tcenter" width="25%">リース開始日</td>
+                            <td class="tcenter" width="30%">
+                                <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+                                    <apex:param value="{!mitumori.LeaseStart__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="tcenter" width="25%">リース期間(A)</td>
+                            <td width="" class="tcenter">
+                                <apex:outputField value="{!mitumori.LeaseMonth__c}" /> ヶ月
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tcenter">リース終了日</td>
+                            <td class="tcenter">
+                                <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}">
+                                    <apex:param value="{!mitumori.LeaseEnd__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td class=" tcenter">リース料率</td>
+                            <td class="tcenter">
+                                <apex:outputField value="{!mitumori.MonthlyLeaseRate__c}" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tablea" cellspacing="0" style="width:100%;margin-top:17px">
+                        <tr>
+                            <td class="tcenter">月額リース料(B)</td>
+                            <td class="tcenter">消費税</td>
+                            <td class="tcenter">合計</td>
+                        </tr>
+                        <tr>
+                            <td width="32%" class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.MonthlyLeaseFeeTotal__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.MonthlyLeaseFeeTax__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputText value="{0, number, ￥###,###,###}">
+                                    <apex:param value="{!mitumori.MonthlyLeaseFeeTotal__c+mitumori.MonthlyLeaseFeeTax__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tablea" cellspacing="0" style="width:100%;margin-top:20px">
+                        <tr>
+                            <td class="tcenter">リース料総額<br/>(C)=(A)*(B)</td>
+                            <td class="tcenter">消費税</td>
+                            <td class="tcenter">合計</td>
+                        </tr>
+                        <tr>
+                            <td width="32%" class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.LeaseAllTotal__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.LeaseAllTotalTax__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputText value="{0, number, ￥###,###,###}">
+                                    <apex:param value="{!mitumori.LeaseAllTotal__c+mitumori.LeaseAllTotalTax__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tablea" cellspacing="0" style="width:100%;margin-top:20px">
+                        <tr>
+                            <td class="tcenter">契約総額<br/>(C)+(D)</td>
+                            <td class="tcenter">消費税</td>
+                            <td class="tcenter">合計</td>
+                        </tr>
+                        <tr>
+                            <td width="32%" class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.PaymentAmountSum__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputField value="{!mitumori.PaymentAmountSumTax__c}" />
+                            </td>
+                            <td class="tcenter fontsize">
+                                <apex:outputText value="{0, number, ￥###,###,###}">
+                                    <apex:param value="{!mitumori.PaymentAmountWithTaxSum__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="font-size: 9px;height:22px;"></div>
+                    <div style="height:22px"></div>
+                </div>
+                <div style="width:49%;float:right;">
+                    <div style="font-size:15px;margin-top: 10px">＜初回支払金額＞</div>
+                    <table class="tabledan" cellspacing="0" style="width:100%;">
+                        <tr>
+                            <td class="tcenter">契約時申受金</td>
+                            <td class="tcenter">
+                                <apex:outputField value="{!mitumori.TotalAcceptanceUponContract__c}" />
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="margin-top:10px;font-size:15px">＜上記明細＞</div>
+                    <apex:variable var="accountprice" value="{!0}" />
+                    <table class="tablea tabled" cellspacing="0" style="width:100%;">
+                        <tr>
+                            <td class="textleft" colspan="2">初回リース料</td>
+                            <td width="45%" class="textright ">
+                                <apex:outputField value="{!mitumori.shokaileasefee__c}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="textleft" colspan="2">
+                                <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}～" rendered="{!mitumori.LeaseStart__c!=null}">
+                                    <apex:param value="{!mitumori.LeaseStart__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0,date,yyyy年}{0,date,MM月}{0,date,dd日}" rendered="{!mitumori.FirstKikanTo1__c!=null}">
+                                    <apex:param value="{!mitumori.FirstKikanTo1__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="textright" style="">
+                                <div style="float:left;">消費税</div>
+                                <div style="float:right;">
+                                    <apex:outputField value="{!mitumori.SyokaiLeaseTax__c}" />
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="2" class=" textleft" style="">保証金（月額リース料の{!mitumori.DepositMonth__c}ヶ月分）</td>
+                            <td style="text-align: right;" class="textright">
+                                <apex:outputField value="{!mitumori.hoshokin__c}" />
+                            </td>
+                        </tr>
+                        <apex:variable var="index" value="{!1}" />
+                        <apex:repeat value="{!productmeisai}" var="meilist">
+                            <tr>
+                                <td style="text-align:left;vertical-align:top;display:{!if(index>1,'none','')};border-bottom: 0px" rowspan="{!productmeisai.size}" width="33%" class="">
+                                    諸経費等(D)
+                                </td>
+                                <td class=" textleft" width="33%">
+                                    <apex:outputText value="{!meilist.Name}"></apex:outputText>
+                                    <!--  <apex:outputText value="{0, number,￥###,####,####}">
+                                <apex:param value="{!meilist.KoumokuName}" />
+                                </apex:outputText>
+                               -->
+                                </td>
+                                <td width="" class="textright">
+                                    <apex:outputText value="{0, number,￥###,###,###}">
+                                        <apex:param value="{!meilist.UnitPriceLease__c}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <apex:variable var="index" value="{!index+1}" />
+                            <apex:variable var="accountprice" value="{!if(meilist.AmountPercentLease__c == null,accountprice ,accountprice + meilist.AmountPercentLease__c)}" />
+                        </apex:repeat>
+                        <tr>
+                            <td class="textleft" style="border-top: 0px"></td>
+                            <td class="textleft" style=""></td>
+                            <td style="" class="textright">
+                                <div style="float:left;">消費税</div>
+                                <div style="float:right;">
+                                    <apex:outputField value="{!mitumori.CostTotalTax__c}" />
+                                </div>
+                            </td>
+                        </tr>
+                        <apex:outputText rendered="{!mitumori.Ken_SpecialDiscount__c ==null}">
+                        <tr>
+                            <td colspan="2" class=" textleft" style="">KEN様特別値引き</td>
+                            <td style="text-align: right;" class="textright">
+                                <apex:outputField value="{!mitumori.Ken_SpecialDiscount__c}" />
+                            </td>
+                        </tr>
+                        </apex:outputText>
+                        <apex:outputText rendered="{!mitumori.DiscountAmount__c !=null}">
+                        <tr>
+                            <td colspan="2" class=" textleft" style="">出精値引</td>
+                            <td style="text-align: right;" class="textright">
+                                <apex:outputField value=" {!mitumori.DiscountAmount__c}" />
+                            </td>
+                        </tr>
+                        </apex:outputText>
+                        <tr>
+                            <td colspan="2" class="" style="">合計</td>
+                            <td style="text-align: right;" class="textright">
+                                <apex:outputText value="{0, number,￥###,###,###}">
+                                    <apex:param value="{!mitumori.TotalAcceptanceUponContract__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="clear: both;font-size: 14px">＜御見積条件等＞</div>
+                <div style="border:1.2px solid #000;height:325px;margin-top:15px;width:97%;padding:10px 10px;font-size: 10px">
+                    <apex:outputText value="{!remarks}" escape="false"></apex:outputText>
+                </div>
+            </div>
+            <div style="margin-top:225px;"></div>
+        <div>
+            <table class="tablemeisi" cellspacing="0" style="width:100%;font-size: 9.5px;">
+              <thead>
+                <tr style="height:26px;">
+                    <td width="2%" rowspan="2" style="border-left: 1.05px solid  #000">No.</td>
+                    <td width="6%" class="tcenter">商品番号</td>
+                    <td width="3%">U/N</td>
+                    <td width="20%" class="tcenter">商品名</td>
+                    <td width="20%" class="tcenter">品番</td>
+                    <td width="13%" class="tcenter">サイズ
+                        <br/>W/D/H/(SH)</td>
+                    <td width="8%" class="tcenter">定価</td>
+                    <td width="3%" class="tcenter">数
+                        <br/>量</td>
+                    <td width="8%" class="tcenter">定価計</td>
+                    <td width="8%" class="tcenter">リース
+                        <br/>価値価格</td>
+                    <td width="8%" class="tcenter">月額リース料</td>
+                </tr>
+                <tr style="height:17px;">
+                    <td colspan="3" class="tcenter">メーカー</td>
+                    <td colspan="7" class="tcenter">仕様</td>
+                </tr>
+              </thead>
+              
+              <tbody>
+
+                <apex:variable var="index" value="{!1}" />
+                <apex:variable var="Price" value="{!0}" />
+                <apex:variable var="Amount" value="{!0}" />
+                <apex:variable var="MonthlyFee" value="{!0}" />
+                <apex:repeat value="{!Listproduct}" var="productlist1">
+                    <tr style="height:24px;background-color:#d0d0d0;">
+                        <td colspan="11" style="text-align: left;border-left: 1.05px solid  #000">
+                            <!--   <apex:outputText value="＜ {!productlist1.InstallationLocation__c}＞" rendered="{!productlist1.basiyoname!=null}"></apex:outputText>-->
+                            <apex:outputText value="＜ {!productlist1.basiyoname}＞" rendered="{!productlist1.basiyoname!=null}"></apex:outputText>
+                        </td>
+                    </tr>
+                    <apex:repeat value="{!productlist1.productList}" var="productlist">
+                        <tr style="height:23px;page-break-inside: avoid">
+                            <td rowspan="2" style="text-align: center;border-left: 1.05px solid  #000">{!index}</td>
+                            <td>{!productlist.InventoryProductNo__c}</td>
+                            <td style="text-align: center">
+                                <!-- {!productlist.Rank__c} 
+                    <apex:outputText value="N" rendered="{!productlist.Rank__c='N'}"></apex:outputText>
+                    <apex:outputText value="U" rendered="{!productlist.Rank__c!='N'}"></apex:outputText>-->
+                                <apex:outputText value="{!productlist.U_N__c}"></apex:outputText>
+                            </td>
+                            <td class="textleft">{!productlist.Name}</td>
+                            <td class="textleft">
+                                <apex:outputText rendered="{!mitumori.ModelNumberHide__c}">{!productlist.ModelTotal__c}</apex:outputText>
+                            </td>
+                            <td class="textleft">
+                                {!productlist.Size__c}
+                            </td>
+                            <td class="textright">
+                                <!--単価-->
+                                <apex:outputText value="{0, number, ###,###,###}">
+                                    <apex:param value="{!productlist.MakerPrice__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td style="text-align: center">{!productlist.Quantity__c}</td>
+                            <td class="textright">
+                                <!--定価-->
+                                <apex:outputText value="{0, number, ###,###,###}">
+                                    <apex:param value="{!productlist.ProductListPrice__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="textright">
+                                <!--ﾘｰｽ価値価格-->
+                                <apex:outputText value="{0, number, ###,###,###}">
+                                    <apex:param value="{!productlist.AmountPercentLease__c}" />
+                                </apex:outputText>
+                                <!--<apex:outputText value="{0, number, ###,###,###}">
+                        <apex:param value="{!productlist.UnitPriceLease__c}" />
+                    </apex:outputText>-->
+                            </td>
+                            <td class="textright">
+                                <!--月額ﾘｰｽ料-->
+                                <apex:outputText value="{0, number, ###,###,###}">
+                                    <apex:param value="{!productlist.MonthlyLeaseFee__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr style="height:24px;">
+                            <td colspan="3" class="textleft">{!productlist.Maker__c}</td>
+                            <td colspan="7" class="textleft">{!productlist.Specification__c}</td>
+                        </tr>
+                        <apex:variable var="index" value="{!index+1}" />
+                        <apex:variable var="Price" value="{!Price+productlist.ProductListPrice__c}" />
+                        <apex:variable var="Amount" value="{!Amount+productlist.UnitPriceLease__c}" />
+                        <apex:variable var="MonthlyFee" value="{!MonthlyFee+productlist.MonthlyLeaseFee__c}" />
+                    </apex:repeat>
+                </apex:repeat>
+                <tr style="height: 23px;font-size: 11px">
+                    <td colspan="6" style="border-left: 0px;border-bottom: 0px;"></td>
+                    <td colspan="2" style="text-align: center;border-bottom: 1.05px solid  #000">合計</td>
+                    <td style="text-align: right;border-bottom: 1.05px solid  #000">
+                        <apex:outputText value="{0, number, ###,###,###}">
+                            <apex:param value="{!mitumori.ProductListPriceSum__c}" />
+                            <!--{!Price}-->
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: right;border-bottom: 1.05px solid  #000">
+                        <apex:outputText value="{0, number, ###,###,###}">
+                            <apex:param value="{!mitumori.AmountLeaseSum__c}" />
+                            <!--{!Amount}-->
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: right;border-bottom: 1.05px solid  #000">
+                        <apex:outputText value="{0, number, ###,###,###}">
+                            <apex:param value="{!mitumori.MonthlyLeaseFeeTotal__c}" />
+                            <!--{!MonthlyFee}-->
+                        </apex:outputText>
+                    </td>
+                </tr>
+
+              </tbody>
+            </table>
+            <div style="margin-top: -15px">※上記の価格は全て税抜価格です。</div>
+        </div>
+    </body>
+
+    </html>
+</apex:page>

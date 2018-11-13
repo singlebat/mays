@@ -1,0 +1,422 @@
+<apex:page controller="ContractHosyoukinPDfController" standardStylesheets="false" applyHtmlTag="false" showHeader="false" renderAs="pdf" docType="html-5.0">
+
+<html>
+<head>
+        <style>
+               @page {
+                size: 21.0cm 29.7cm;
+                margin-top: 0cm;
+                margin-left: 1.0cm;
+                margin-right: 1.0cm;
+                margin-bottom: 1cm;
+            }
+                body {
+                font-family : Arial Unicode MS;
+                font-size:12px;
+                margin-left: 0px;
+                margin-right: 0px;
+                }
+
+            @page {
+                    @top-center {
+                        content: element(header);
+                    }
+        
+                    @bottom-right {
+                        content: element(footer);
+                    }
+                    thead {
+                        display: table-header-group;
+                    }
+        		}
+                div.footer{
+                	 padding-bottom:0.5cm;
+                     position: running(footer);
+                }
+                .pagenumber:before {
+                content: counter(page);
+                }
+                .pagecount:before {
+                content: counter(pages);
+                }
+                .page-break{
+                page-break-before:always;
+                }
+                .page-break-after{
+                    page-break-after: always;
+                }
+                .printItem{
+                    position:absolute;
+                 }
+                 .printItem1{
+                    position:relative;
+                 }
+
+				.hide{
+					display:none;
+				}
+
+                 table.tablea {
+                    border-top: solid 0.78px #000;
+                    border-right: solid 0.78px #000;
+                }
+
+                table.tablea td {
+                    border: solid 0.3px #000;
+                }
+
+
+                table.tablec td{
+                    border-left: solid 1.08px #000;
+                    
+                }
+
+                
+                table.tableb td {
+                    border: solid 0.3px #000;
+                }
+                
+
+                table.table1  {border: solid 1.08px #000; }
+                table.table1 td{border: solid 0.3px #000; }
+
+			   .textcenter{text-align: center;padding-left: 4px}
+               .textleft{text-align: left;padding-left: 4px}
+               .textright{text-align: right;padding-right: 4px}
+				.text-right{text-align: right;margin-bottom: solid 2px #000;}
+                table.table2  {border-collapse:collapse;border: solid 1px #000;}
+                table.table2  td{text-align: center;border-right: solid 1px #000;}
+
+                .border{border: solid 1.08px #000;}
+            	.border3{border-bottom: solid 0.3px #000;border-left: solid 1.08px #000;border-right: solid 1.08px #000;}
+            	.border1{border-left: solid 0.3px #000;}
+            	.border2{border-left: solid 0.3px #000;border-top: solid 0.3px #000;}
+                
+            	.bottomt{border-top: solid 0.3px #000;}
+                .page-break-inside{
+                               page-break-inside:avoid;
+       　　　       }
+
+                
+                 .titleposition {
+                    position: absolute;
+                }
+
+
+                .titlebango{
+                    position: absolute;
+                    top: 1.1cm;
+                }
+
+          </style>
+</head>
+<body>
+
+<apex:variable var="pageIndex" value="{!1}"/>
+
+<apex:repeat value="{!PageList}" var="Page">
+	    <apex:variable var="pageCountLease" value="{!0}"/>
+	    <apex:variable var="pageCountMove" value="{!0}"/>
+	    <apex:variable var="pageCountLeaseTax" value="{!0}"/>
+	    <apex:variable var="pageCountMoveTax" value="{!0}"/>
+	    <apex:variable var="pageCountHosyoukin" value="{!0}"/>
+	    <apex:variable var="pageCountGoukei" value="{!0}"/>
+	    <apex:variable var="monthlySeikyukin" value="{!0}"/>  
+		<div class="{!if(pageIndex = 1,'','page-break')}">
+			<!------------------------------------1ページ目のヘッダ----------------------------------------->
+		    <apex:outputText rendered="{!pageIndex = 1}">    
+		    <div  class="titleposition"  style="top: 1.5cm;width: 100%;text-align: center;font-size:25px;">
+		        <div  style="">請&nbsp;&nbsp;求&nbsp;&nbsp;書</div>
+		    </div>
+		    <div style="float:right;margin-top: 20px;">
+		      <table  cellspacing="0" style="width:20%;font-size: 13px;margin-left: 185px;margin-top:10px;" >
+		                        <tr style="height:18px;">
+		                            <td width="50%" class="textleft" >請求先コード</td>
+		                            <td width="50%" class="textleft" style="border-bottom:0.5px solid black;">{!billeds.Name}</td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="50%" class="textleft" >販売番号</td>
+		                            <td width="50%" class="textleft" style="border-bottom:0.5px solid black;">{!agree.Estimate__r.Name}</td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="50%" class="textleft"></td>
+		                            <td width="50%" class="textcenter">
+		                            	<apex:outputText value="{0,date,yyyy年M月d日}"> <apex:param value="{!today()}"/> </apex:outputText>
+		                            </td>
+		                        </tr>
+		      </table>
+		     </div>
+		    </apex:outputText>
+			<!------------------------------------1ページ目以外のヘッダ----------------------------------------->
+		    <apex:outputText rendered="{!pageIndex != 1}">    
+			    <div  class=""  style="margin-top: 1.5cm;text-align: center;font-size:25px;">
+			        		販売物件一覧表
+			    </div>
+				<div style="float:right;margin-top: -35px;margin-left: 225px;">
+				      <table  cellspacing="0" style="width:20%;font-size: 13px;margin-top:0px;" >
+				                        <tr style="height:18px;">
+				                            <td  class="textright">No.{!pageIndex-1}</td>
+				                        </tr>
+				                        <tr style="height:18px;">
+				                            <td  class="textright">
+				                            	<apex:outputText value="{0,date,yyyy/M/d}"><apex:param value="{!today()}"/>  </apex:outputText>
+				                            </td>
+				                        </tr>
+				      </table>
+			     </div>
+		    </apex:outputText>
+		   
+		    <!------------------------------------表紙部分----------------------------------------->
+		 	<apex:outputPanel rendered="{!IF(pageIndex==1,true,false)}" layout="none">
+		            　　<!--場所-->
+		                <div class="titleposition" style="width: 100%;top:2.8cm;font-size: 13px">
+		                        <div  style="width:300px;">〒{!billeds.SeikyusakiPostalCode__c}</div>
+		                        <div  style="width:300px;margin-top:2px ">{!billeds.SeikyusakiAddress__c}</div>
+		
+		                        <div  style="width:360px; margin-top: 10px"> {!billeds.Account__r.Name}</div>
+		                        <div  style="width:360px; margin-top: 2px;font-size: 11.5px"> &nbsp;&nbsp;&nbsp;{!billeds.Contact_Position_Billed__c}</div>
+
+		                </div>
+		        　　　　<!--logo-->
+		                <!-- logo -->
+                    <div class="printItem" style="position: relative;margin-left:510px;font-size:11.5px;margin-top:100px;">
+                    	<div style="z-index:399;position:relative;margin-top:30px">
+	                    	<p style="z-index:399;font-size:17px;">
+	                    	<img style="z-index:399;position:relative;margin-top:-5px" src="{!$Resource.logoPDF}" width="65px"  />&nbsp; 株式会社 メイズ
+	                    	</p>
+                    	</div>
+                        <div style="z-index:399;position:relative;margin-top:-20px">
+                         	〒105-0001<br/>
+                         	 東京都港区虎ノ門3-2-2<br/>
+                         	 　　　　　　　　　虎ノ門30森ビル1階
+                         	 TEL:03-5402-4600　Fax:03-5402-4660
+                        </div>
+                        <div style="z-index:999;margin-top:-20px;">
+                        	<img style="position:relative;margin-top:-250px;margin-left:120px;width:80px;height:80px;" src="{!$Resource.newshain}"/>
+                        </div>
+                    </div>
+		        <!--注意メッセージ-->        
+		                <div style="width:100px; margin-top: 30px;font-size: 13px">
+		                            毎度格別のお引き立てを頂き誠に有難うございます。
+		                            下記の通りご請求申し上げますので、お支払期日までにご手配くださいますようお願い申し上げます。
+		                </div>
+		        <!--表紙の会計部分-->         
+		                <div style="margin-top: 40px;">
+		                	<div style="font-size:23px;margin-left: 205px;">御請求金額   
+		                	<div style="border-bottom:1.2px solid #000;margin-left: 0px;margin-top: -37px;width:270px;text-align:right;">
+		                			<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!billeds.agrement__r.FusokuAmount__c}" /> 
+		                            </apex:outputText>
+		                	</div>
+		                	</div>
+		                	 <table  cellspacing="0" style="width:60%;font-size: 13px;margin-left: 145px;margin-top:37px;" >
+		                        <tr style="height:18px;">
+		                            <td width="80%" class="textleft">商品代金（明細は添付リストを参照ください。）</td>
+		                            <td width="20%" class="textright">
+		                                    <apex:outputText value="￥{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!billeds.agrement__r.ProductKaitoriAmnout__c}" /> 
+		                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+
+		                        <apex:repeat var="inv" value="{!inven}">
+			                        <tr style="height:18px;">
+			                            <td width="80%" class="textleft">
+			                            	{!inv.OpportunityProduct__r.Name}
+			                            </td>
+			                            <td width="20%" class="textright">
+			                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!inv.UnitPriceLease__c}" /> 
+		                            		</apex:outputText>
+			                            </td>
+			                        </tr>
+		                        </apex:repeat>
+
+		                
+	                        	<tr style="height:18px;">
+		                            <td width="80%" class="textleft">
+		                            	(保証金返金)ダメージ料金
+		                            </td>
+		                            <td width="20%" class="textright">
+		                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+	                            			<apex:param value="{!billeds.agrement__r.damageMoney__c}" /> 
+	                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+	                        	<tr style="height:18px;">
+		                            <td width="80%" class="textleft">
+		                            	(保証金返金)個別送料
+		                            </td>
+		                            <td width="20%" class="textright">
+		                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+	                            			<apex:param value="{!billeds.agrement__r.DeliveryFee__c}" /> 
+	                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+	                        	<tr style="height:18px;" >
+		                            <td width="80%" class="textleft">
+		                            	(保証金返金)その他料金 
+		                            </td>
+		                            <td width="20%" class="textright">
+		                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+	                            			<apex:param value="{!billeds.agrement__r.OthersFee__c}" /> 
+	                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+								<tr style="height:18px;" class="{!if(agree.HoshokinSousai__c=='希望する','','hide')}">
+		                            <td width="80%" class="textleft">
+		                            	保証金
+		                            </td>
+		                            <td width="20%" class="textright">
+		                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+	                            			<apex:param value="{!billeds.agrement__r.Hoshokin__c}" /> 
+	                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+		                        <tr style="height:18px;" class="{!if(agree.HoshokinSousai__c=='希望する','','hide')}">
+		                            <td width="80%" class="textleft">
+		                            	(保証金返金)過入金
+		                            </td>
+		                            <td width="20%" class="textright">
+		                             	<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+	                            			<apex:param value="{!billeds.agrement__r.OverPaymentAmount__c}" /> 
+	                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+		                        
+		                        <apex:repeat var="fee" value="{!Feelist}">
+			                        <tr style="height:18px;">
+			                            <td width="80%" class="textleft"></td>
+			                            <td width="20%" class="textright">{!fee}</td>
+			                        </tr>
+		                        </apex:repeat>
+		                        <tr style="height:18px;">
+		                            <td width="80%" class="textleft">消費税</td>
+		                            <td width="20%" class="textright">
+		                            		<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!billeds.agrement__r.InvoiceTaxFee__c}" /> 
+		                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+		                         <tr style="height:18px;border-top:3px solid black;">
+		                            <td width="80%" class="textleft" style="border-top:2px solid black;"></td>
+		                            <td width="20%" class="textright" style="border-top:2px solid black;">
+		                            		<apex:outputText value="￥{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!billeds.agrement__r.FusokuAmount__c}" /> 
+		                            		</apex:outputText>
+		                            </td>
+		                        </tr>
+		                     </table>
+		                </div>
+		                
+		             	<div style="width:100px; margin-top: 100px;font-size: 13px">
+		                            下記の銀行口座へお振り込み下さい。
+		                            お振り込みに掛かる手数料はお客様負担となります。
+		                </div>
+		                <div  style="width:250px; margin-top: 15px;margin-left: 20px;">
+		                   <table  cellspacing="0" style="width:100%;font-size: 13px;" >
+		                        <tr style="height:18px;">
+		                            <td width="30%" class="textleft">金融機関</td>
+		                            <td width="70%" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!financialName}&nbsp;{!financialbranch}</td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="30%" class="textleft">口座種別</td>
+		                            <td width="70%" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!bankaccounttype}</td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="30%" class="textleft">口座番号</td>
+		                            <td width="70%" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!bankaccountNumber}</td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="30%" class="textleft">口座名義</td>
+		                            <td width="70%" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!bankaccountNominee}</td>
+		                        </tr>
+		                        <tr style="height:8px;">
+		                            <td width="30%" class="textleft"></td>
+		                            <td width="70%" ></td>
+		                        </tr>
+		                        <tr style="height:18px;">
+		                            <td width="30%" class="textleft">支払期日</td>
+		                            <td width="70%" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                                <apex:outputText value="{0,date,yyyy年M月d日}"> <apex:param value="{!billeds.KijituDate__c}" /> </apex:outputText>
+		                            </td>
+		                        </tr>
+		                   </table>
+		                </div>
+			</apex:outputPanel>
+			<!------------------------------------1ページ目以外の中身----------------------------------------->
+			<apex:outputPanel rendered="{!IF(pageIndex!=1,true,false)}" layout="none">
+			     <table class="tablea" cellspacing="0" style="width:100%;font-size: 12px;margin-top: 15px;" >
+			            	<tr style="height:24px;text-align:center;">
+			                	<td width="10%" style="text-align:center;border-left: solid 1.08px #000;border-bottom: solid 0.6px #000;"  rowspan="1">管理番号</td>
+			                    <td width="28%" class="" rowspan="1">商品名</td>
+			             		<td width="23%" class="" rowspan="1">メーカー名</td>
+			            		<td width="15%" class="" rowspan="1">型番</td>
+			                    <td width="12%" class="" rowspan="1">定価</td>
+			                    <td width="12%"  class=""  rowspan="1">販売価格</td>
+			       		    </tr>
+				            <!--ここでループしよう-->
+				            <apex:repeat var="b" value="{!Page}">
+				              	<tr style="height:21px;">
+				              		<!-- 管理番号 -->
+				                	<td  style="text-align:left;border-left: solid 1.08px #000;border-top: 0px;"  rowspan="1">{!b.ManageNo__c}</td>
+				                	<!-- 商品名 -->
+				                    <td  class=""  style="border-bottom: 0px;text-align:left;"  rowspan="1" >
+				                        {!b.ProductName__c}
+				                    </td>
+				                    <!-- メーカー名 -->
+				             		<td  class="" rowspan="1" style="text-align:left;border-bottom: 0px;">
+				                        {!b.MakerName__c}
+				                    </td>
+				                    <!-- 型番 -->
+				            		<td  class="" rowspan="1" style="text-align:left;border-bottom: 0px;">
+				                       <apex:outputField value="{!b.Kataban__c}"/>
+				                    </td>
+				                    <apex:variable var="pageCountHosyoukin" value="{!pageCountHosyoukin+if(b.AmountPercent__c = null,0,b.AmountPercent__c)}"/>
+				                    <apex:variable var="pageCountGoukei" value="{!pageCountGoukei+if(b.SellingPrice__c = null,0,b.SellingPrice__c)}"/>
+				                    <!-- 定価 -->
+				                    <td  class="" rowspan="1" style="text-align:right;border-bottom: 0px;">
+				                     		<apex:outputText value="{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!b.AmountPercent__c }" /> 
+		                            		</apex:outputText>
+				                    </td>
+				                    <!-- 販売価格 -->
+				             		<td  class="" rowspan="1" style="text-align:right;border-bottom: 0px;">
+				                     	<apex:outputText value="{0, Number, ###,###,##0}"> 
+		                            			<apex:param value="{!b.SellingPrice__c }" /> 
+		                            		</apex:outputText>
+				                    </td>
+				       		    </tr>
+				            </apex:repeat>
+				            <!--ここでループしよう-->
+			                <tr style="height:21px;">
+			                	<td  rowspan="1" style="border-bottom: 0px;border-left: 0px;border-right: 0px;border-top: solid 0.78px #000;"></td>
+			                	<td  rowspan="1" style="border-bottom: 0px;border-left: 0px;border-right: 0px;border-top: solid 0.78px #000;"></td>
+			                	<td  rowspan="1" style="border-bottom: 0px;border-left: 0px;border-top: solid 0.78px #000;border-right: solid 0.78px #000;"></td>       
+			                    <td  rowspan="1" style="text-align:center;border-bottom: solid 1.08px #000;border-top: solid 0.78px #000;">
+			                         合計
+			                    </td>
+			                    <td  rowspan="1" style="text-align:right;border-bottom: solid 1.08px #000;border-top: solid 0.78px #000;">
+			                        <apex:outputText value="{0, Number, ###,###,##0}"> <apex:param value="{!pageCountHosyoukin}" /> </apex:outputText>
+			                    </td>
+			                    <td  rowspan="1" style="text-align:right;border-bottom: solid 1.08px #000;border-top: solid 0.78px #000;">
+			                         <apex:outputText value="{0, Number, ###,###,##0}"> <apex:param value="{!pageCountGoukei}" /> </apex:outputText>
+			                    </td>
+			                </tr>
+			     </table>
+			</apex:outputPanel>    
+		</div>
+		
+		
+		<div class="footer">
+		   <div class="text-right" style="width: 100%;margin-bottom: 20px">
+		       <span class="pagenumber"/> / <span class="pagecount"/>
+		   </div>
+		</div>
+		
+		<apex:variable var="pageIndex" value="{!pageIndex+1}"/>     
+		
+</apex:repeat>
+</body>
+</html>
+</apex:page>
